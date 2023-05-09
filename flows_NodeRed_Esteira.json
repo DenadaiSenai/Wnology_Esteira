@@ -1,0 +1,319 @@
+[
+    {
+        "id": "14f025bc03b909fb",
+        "type": "tab",
+        "label": "Esteira_Weg",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "cf8e190c637408b0",
+        "type": "debug",
+        "z": "14f025bc03b909fb",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 510,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "cf0e3b4fb48b7af3",
+        "type": "s7 in",
+        "z": "14f025bc03b909fb",
+        "endpoint": "4f15cf1be5eabaca",
+        "mode": "all",
+        "variable": "",
+        "diff": false,
+        "name": "",
+        "x": 300,
+        "y": 120,
+        "wires": [
+            [
+                "cf8e190c637408b0",
+                "ca1aa99d1c85dfb7"
+            ]
+        ]
+    },
+    {
+        "id": "ca1aa99d1c85dfb7",
+        "type": "function",
+        "z": "14f025bc03b909fb",
+        "name": "function 1",
+        "func": "var valjson =\n{\"data\":\n        {\n            \"motor\"       : msg.payload.Motor,\n            \"Count_Rampa1\": msg.payload.Count_Rampa1,\n            \"Count_Rampa2\": msg.payload.Count_Rampa2,\n            \"Count_Rampa3\": msg.payload.Count_Rampa3,\n            \"Count_paca_ok\": msg.payload.Count_paca_ok,\n            \n        }    \n}\n\nmsg.payload = valjson\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 100,
+        "wires": [
+            [
+                "cf1a981f764ebe10",
+                "9d5b6645a0a13ef4"
+            ]
+        ]
+    },
+    {
+        "id": "cf1a981f764ebe10",
+        "type": "mqtt out",
+        "z": "14f025bc03b909fb",
+        "name": "RomualdoLe",
+        "topic": "wnology/64592dac0773ece28f50bad0/state",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "3b8d9776d9e52cec",
+        "x": 830,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "1dc7cea5086d0f9f",
+        "type": "mqtt in",
+        "z": "14f025bc03b909fb",
+        "name": "RomualdoEscreve",
+        "topic": "wnology/64592dac0773ece28f50bad0/command",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "3b8d9776d9e52cec",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 420,
+        "wires": [
+            [
+                "044bc2b965e86901"
+            ]
+        ]
+    },
+    {
+        "id": "044bc2b965e86901",
+        "type": "json",
+        "z": "14f025bc03b909fb",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 410,
+        "y": 420,
+        "wires": [
+            [
+                "15f312e9229d251e",
+                "dd80e925a15c6aca"
+            ]
+        ]
+    },
+    {
+        "id": "15f312e9229d251e",
+        "type": "function",
+        "z": "14f025bc03b909fb",
+        "name": "function 2",
+        "func": "if (msg.payload.name == \"motorest\")\n{\n    msg.payload = msg.payload.payload.motorest\n    msg.topic = 'Liga_remoto'\n}\n\nif (msg.payload.name == \"reset_cont\")\n{\n    msg.payload = msg.payload.payload.reset\n    msg.topic = 'reset_cont'\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 420,
+        "wires": [
+            [
+                "4e7565923b9d42e3",
+                "3b7e93da24bab225"
+            ]
+        ]
+    },
+    {
+        "id": "4e7565923b9d42e3",
+        "type": "switch",
+        "z": "14f025bc03b909fb",
+        "name": "",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "Liga_remoto",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "reset_cont",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 790,
+        "y": 420,
+        "wires": [
+            [
+                "942352aab9cc3bc4"
+            ],
+            [
+                "0c94bf401a062ea2"
+            ]
+        ]
+    },
+    {
+        "id": "dd80e925a15c6aca",
+        "type": "debug",
+        "z": "14f025bc03b909fb",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "9d5b6645a0a13ef4",
+        "type": "debug",
+        "z": "14f025bc03b909fb",
+        "name": "debug 1",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "3b7e93da24bab225",
+        "type": "debug",
+        "z": "14f025bc03b909fb",
+        "name": "debug 2",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "942352aab9cc3bc4",
+        "type": "s7 out",
+        "z": "14f025bc03b909fb",
+        "endpoint": "4f15cf1be5eabaca",
+        "variable": "liga_2",
+        "name": "",
+        "x": 1170,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "0c94bf401a062ea2",
+        "type": "s7 out",
+        "z": "14f025bc03b909fb",
+        "endpoint": "4f15cf1be5eabaca",
+        "variable": "reset_count_2",
+        "name": "",
+        "x": 1200,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "4f15cf1be5eabaca",
+        "type": "s7 endpoint",
+        "transport": "iso-on-tcp",
+        "address": "10.87.111.43",
+        "port": "102",
+        "rack": "0",
+        "slot": "1",
+        "localtsaphi": "01",
+        "localtsaplo": "00",
+        "remotetsaphi": "01",
+        "remotetsaplo": "00",
+        "connmode": "rack-slot",
+        "adapter": "",
+        "busaddr": "2",
+        "cycletime": "1000",
+        "timeout": "2000",
+        "name": "",
+        "vartable": [
+            {
+                "addr": "Q0.0",
+                "name": "Motor"
+            },
+            {
+                "addr": "MW5",
+                "name": "Count_Rampa1"
+            },
+            {
+                "addr": "MW8",
+                "name": "Count_Rampa2"
+            },
+            {
+                "addr": "MW10",
+                "name": "Count_Rampa3"
+            },
+            {
+                "addr": "MW12",
+                "name": "Count_paca_ok"
+            },
+            {
+                "addr": "M14.0",
+                "name": "liga_2"
+            },
+            {
+                "addr": "M14.1",
+                "name": "reset_count_2"
+            }
+        ]
+    },
+    {
+        "id": "3b8d9776d9e52cec",
+        "type": "mqtt-broker",
+        "name": "Romualdo",
+        "broker": "broker.app.wnology.io",
+        "port": "1883",
+        "clientid": "64592dac0773ece28f50bad0",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]
